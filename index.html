@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>InstaFlow 로그인 완료</title>
+<style>
+ body{font-family:'Malgun Gothic',system-ui,sans-serif;max-width:720px;margin:48px auto;padding:0 16px;color:#0f172a}
+ h1{font-size:20px} .box{background:#f1f5f9;border:1px solid #cbd5e1;border-radius:8px;padding:12px;word-break:break-all;font-family:Consolas,monospace;font-size:13px}
+ button{margin-top:10px;padding:8px 18px;border:1px solid #2563eb;background:#2563eb;color:#fff;border-radius:6px;cursor:pointer}
+ .warn{color:#92400e;background:#fef3c7;border:1px solid #d97706;border-radius:8px;padding:10px;margin-top:16px}
+</style>
+</head>
+<body>
+<h1 id="title">로그인 결과를 확인하는 중…</h1>
+<div id="msg"></div>
+<div class="box" id="full" style="display:none"></div>
+<button id="copy" style="display:none">전체 주소 복사</button>
+<div class="warn">이 페이지는 아무 곳에도 값을 전송하지 않습니다. 위 주소(코드 포함)를 <b>InstaFlow 창에 붙여넣은 뒤</b> 이 창을 닫으세요. 코드는 1시간 동안, 한 번만 쓸 수 있고 다른 사람에게 보여 주면 안 됩니다.</div>
+<script>
+(function () {
+  var url = location.href.replace(/#_?$/, "");
+  var q = new URLSearchParams(location.search);
+  var title = document.getElementById("title"), msg = document.getElementById("msg"), full = document.getElementById("full"), copy = document.getElementById("copy");
+  if (q.get("error")) {
+    title.textContent = "연결이 취소되었거나 오류가 있었습니다";
+    msg.textContent = (q.get("error_description") || q.get("error") || "").replace(/\+/g, " ");
+    return;
+  }
+  if (!q.get("code")) { title.textContent = "코드가 없습니다"; msg.textContent = "InstaFlow의 [연결 시험]에서 열린 로그인 창으로 다시 시도하세요."; return; }
+  title.textContent = "로그인 완료 — 아래 주소를 InstaFlow에 붙여넣으세요";
+  full.style.display = "block"; full.textContent = url;
+  copy.style.display = "inline-block";
+  copy.onclick = function () { navigator.clipboard.writeText(url).then(function () { copy.textContent = "복사됨"; }); };
+})();
+</script>
+</body>
+</html>
